@@ -42,7 +42,7 @@ which rowmap
 which ProbGetParams      % is in problem directory
 
 % Select time integration scheme
-integrator = 'ode45';
+integrator = 'ode15s';
 % Set tolerance for time integration
 tol=1e-6;
 % Set output function
@@ -74,6 +74,17 @@ switch integrator
   tic
   [t,y] = ode45(@tdrFdgl, tspan, y0, options);
   toc
+ case 'ode15s'
+  disp('Running ode15s ...');
+  % install output function for odesolver
+  clear options;
+  options=[];
+  options = odeset(options, 'OutputFcn', outputfun);
+  options = odeset(options, 'AbsTol', tol, 'RelTol', tol);
+  tic
+  [t,y] = ode45(@tdrFdgl, tspan, y0, options);
+  toc
+  
  otherwise
   error('unknown integrator');
 end
